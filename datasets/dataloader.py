@@ -49,7 +49,8 @@ class MelFromDisk(Dataset):
 
     def my_getitem(self, idx):
         wavpath = self.wav_list[idx]
-        id = os.path.basename(wavpath).split(".")[0]
+        wavpath_base = os.path.basename(wavpath)
+        id = os.path.splitext(wavpath_base)[0]
 
         mel_path = "{}/{}.npy".format(self.hp.data.mel_path, id)
         sr, audio = read_wav_np(wavpath)
