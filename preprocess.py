@@ -30,14 +30,15 @@ def main(hp, args):
             (hp.audio.sampling_rate, sr, wavpath)
         
         if len(wav) < hp.audio.segment_length + hp.audio.pad_short:
-            wav = np.pad(wav, (0, hp.audio.segment_length + hp.audio.pad_short - len(wav)), \
-                    mode='constant', constant_values=0.0)
+            wav = np.pad(wav, (0, hp.audio.segment_length + hp.audio.pad_short - len(wav)), mode='constant', constant_values=0.0)
 
         wav = torch.from_numpy(wav).unsqueeze(0)
         mel = stft.mel_spectrogram(wav)  # mel [1, num_mel, T]
         mel = mel.squeeze(0)  # [num_mel, T]
-        id = os.path.basename(wavpath).split(".")[0]
+        wavpath_base = os.path.basename(wavpath)
+        id = os.path.splitext(wavpath_base)[0]
         np.save('{}/{}.npy'.format(mel_path, id), mel.numpy(), allow_pickle=False)
+        print('{}/{}.npy'.format(mel_path, id))
         #torch.save(mel, melpath)
 
 
@@ -47,6 +48,7 @@ if __name__ == '__main__':
                         help="yaml file for config.")
     parser.add_argument('-d', '--data_path', type=str, required=True,
                         help="root directory of wav files")
+    #argv = ['--config', './config/mb_melgan.yaml', '--data_path', './wavs']
     args = parser.parse_args()
     hp = HParam(args.config)
 
