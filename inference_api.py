@@ -35,11 +35,11 @@ def predict(hp, model, mel, denoise=False, device="cuda"):
         audio = model.inference(mel)
         # For multi-band inference
         if hp.model.out_channels > 1:
-            pqmf = PQMF()
+            pqmf = PQMF(device=device)
             audio = pqmf.synthesis(audio).squeeze(0) #.view(-1)
   #      audio = audio.squeeze(0)  # collapse all dimension except time axis
         if denoise:
-            denoiser = Denoiser(model).to(device)
+            denoiser = Denoiser(model, device=device).to(device)
             audio = denoiser(audio, 0.1).mean(0)
         audio = audio.squeeze()
         audio = audio[:-(hp.audio.hop_length*10)]
@@ -57,6 +57,6 @@ def repl_test():
 
     hp, model = init(config, checkpoint_path, device=device)
 
-    mel = torch.randn(1, 80, 106)
+    mel = torch.randn(1, 80, 106).to(device)
     denoise = True
     audio = predict(hp, model, mel, denoise=denoise, device=device)
