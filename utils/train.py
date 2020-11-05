@@ -97,6 +97,7 @@ def train(args, pt_dir, chkpt_path, trainloader, valloader, writer, logger, hp, 
                     y_mb_ = fake_audio
                     fake_audio = pqmf.synthesis(y_mb_)
 
+                fake_audio.cuda()
 
                 sc_loss, mag_loss = stft_loss(fake_audio[:, :, :audioG.size(2)].squeeze(1), audioG.squeeze(1))
                 loss_g = sc_loss + mag_loss
