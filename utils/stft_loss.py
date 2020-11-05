@@ -21,6 +21,7 @@ def stft(x, fft_size, hop_size, win_length, window):
         Tensor: Magnitude spectrogram (B, #frames, fft_size // 2 + 1).
     """
     x.cuda()
+    window.cuda()
     x_stft = torch.stft(x, fft_size, hop_size, win_length, window)
     real = x_stft[..., 0]
     imag = x_stft[..., 1]
@@ -127,12 +128,8 @@ class MultiResolutionSTFTLoss(torch.nn.Module):
             Tensor: Multi resolution spectral convergence loss value.
             Tensor: Multi resolution log STFT magnitude loss value.
         """
-        print(x, x.get_device())
-        print(y, y.get_device())
         x.cuda()
         y.cuda()
-        print(x, x.get_device())
-        print(y, y.get_device())
         sc_loss = 0.0
         mag_loss = 0.0
         for f in self.stft_losses:
