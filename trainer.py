@@ -17,6 +17,7 @@ if __name__ == '__main__':
                         help="path of checkpoint pt file to resume training")
     parser.add_argument('-n', '--name', type=str, required=True,
                         help="name of the model for logging, saving checkpoint")
+    #argv = ['-c', './config/mb_melgan.yaml', '-n', 'melgan-male', '-p', './checkpoints/mb_melgan_901be72_0600.pt']
     args = parser.parse_args()
 
     hp = HParam(args.config)
@@ -50,3 +51,7 @@ if __name__ == '__main__':
     valloader = create_dataloader(hp, args, False)
 
     train(args, pt_dir, args.checkpoint_path, trainloader, valloader, writer, logger, hp, hp_str)
+
+
+def repl_test():
+    chkpt_path = args.checkpoint_path
