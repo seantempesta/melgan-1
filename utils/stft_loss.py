@@ -124,6 +124,8 @@ class MultiResolutionSTFTLoss(torch.nn.Module):
             Tensor: Multi resolution spectral convergence loss value.
             Tensor: Multi resolution log STFT magnitude loss value.
         """
+        x.cuda()
+        y.cuda()
         sc_loss = 0.0
         mag_loss = 0.0
         for f in self.stft_losses:
